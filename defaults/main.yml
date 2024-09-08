@@ -1,5 +1,6 @@
 ---
 # defaults file for mfic.docker-wordpress
+php_timezone: "UTC"
 traefik_tls_provider: "letsencrypt" #letsencrypt (HTTP-Challange) or cloudflare (DNS-Challange)
 traefik_docker_network: "webproxy"
 site_working_directory: "/path"
