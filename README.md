@@ -6,17 +6,49 @@ An Ansible role to manage Wordpress instances
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- docker
+- ansible
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Required variables
+```yaml
+site_working_directory: "/path"
+db_image: "mariadb" #mysql or mariadb
+db_version: 11
+db_root_password: "supersecurepassword"
+db_database: "wordpress"
+db_user: "db_user"
+db_user_password: "securepassword"
+wp_router_traefik: "router_base_name"
+wp_domains: "Host(`fqdn`) || Host(`www.fqdn`)"
+```
 
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Optional variables
+```yaml
+traefik_tls_provider: "letsencrypt" #letsencrypt (HTTP-Challange) or cloudflare (DNS-Challange)
+traefik_docker_network: "webproxy"
+db_volume: "./data/db"
+db_resources_limits:
+  cpus: "0.5"
+  memory: "300M"
+db_logging:
+  driver: "json-file"
+  max_size: "1m"
+  max_file: "10"
+wp_image: "wordpress"
+wp_version: "latest"
+wp_resources_limits:
+  cpus: "0.5"
+  memory: "300M"
+wp_volume: "./data/site"
+wp_table_prefix: "wp_"
+wp_logging:
+  driver: "json-file"
+  max_size: "1m"
+  max_file: "10"
+```
 
 Example Playbook
 ----------------
@@ -25,14 +57,9 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: mfic.docker-wordpress }
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT

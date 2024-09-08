@@ -1,2 +1,23 @@
 ---
 # tasks file for mfic.docker-wordpress
+- name: Make sure base path exists
+  ansible.builtin.file:
+    path: "{{ site_working_directory }}"
+    state: directory
+
+- name: Make sure config directory exists
+  ansible.builtin.file:
+    path: "{{ site_working_directory }}/conf.d"
+    state: directory
+
+- name: Copy required files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ site_working_directory }}"
+  with_items:
+    - docker-compose.yml
+
+- name: Copy php.ini
+  ansible.builtin.template:
+    src: "conf.d/php.ini"
+    dest: "{{ site_working_directory }}/conf.d/php.ini"
